@@ -1,51 +1,97 @@
 /* eslint-disable no-console */
-import React, { useRef } from 'react';
-import { Modal, Form, Select, FormInstance } from 'antd';
+import React, { useRef, useState, useEffect } from 'react';
+import { Modal, Form, Select, FormInstance, Typography, Spin } from 'antd';
+import { useGetSubPlanDetailsQuery } from '../../../services/api'; // Adjust the import based on your setup
+
+// Define the type for a subscription plan
+interface SubscriptionPlan {
+  _id: string;
+  name: string;
+  amount: number;
+  duration: string;
+}
 
 interface ReSubscribeModalProps {
   visible: boolean;
-  onOk: (values: Record<string, any>) => void; // Explicitly typing 'values'
+  onOk: (values: Record<string, any>) => void;
   onCancel: () => void;
 }
 
-const { Option } = Select; // Destructure Option from Select
+const { Option } = Select;
+const { Text } = Typography;
 
 const ReSubscribeModal: React.FC<ReSubscribeModalProps> = ({ visible, onOk, onCancel }) => {
-  const formRef = useRef<FormInstance | null>(null); // Use FormInstance to type the form ref
+  const formRef = useRef<FormInstance | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
+
+  // Fetch subscription plan data using RTK Query hook
+  const { data: subscriptionPlans, isLoading } = useGetSubPlanDetailsQuery({});
+
+  const handlePlanChange = (value: string) => {
+    const selected = subscriptionPlans?.data?.find((plan: SubscriptionPlan) => plan.name === value); // Access subscriptionPlans.data
+    setSelectedPlan(selected || null);
+  };
+
+  useEffect(() => {
+    // Reset selected plan when modal is reopened
+    if (visible) {
+      setSelectedPlan(null);
+    }
+  }, [visible]);
 
   return (
     <Modal
-      title="Re-Subscribe"
+      title="Subscribe"
       visible={visible}
       onOk={() => {
         const form = formRef.current;
         if (form) {
           form
             .validateFields()
-            .then((values: Record<string, any>) => { // Explicitly typing 'values'
-              onOk(values); // Only send subsType to onOk
+            .then((values: Record<string, any>) => {
+              onOk(values);
               form.resetFields();
             })
-            .catch((info: any) => { // Explicitly typing 'info'
+            .catch((info: any) => {
               console.log('Validate Failed:', info);
             });
         }
       }}
       onCancel={onCancel}
     >
-      <Form layout="vertical" ref={formRef}>
-        <Form.Item
-          label="Subscription Type"
-          name="subsType"
-          rules={[{ required: true, message: 'Please select the subscription type!' }]} // Update message
-        >
-          <Select placeholder="Select subscription type">
-            <Option value="basic">Basic</Option>
-            <Option value="standard">Standard</Option>
-            <Option value="premium">Premium</Option>
-          </Select>
-        </Form.Item>
-      </Form>
+      {isLoading ? (
+        <Spin tip="Loading subscription plans..." />
+      ) : (
+        <Form layout="vertical" ref={formRef}>
+          <Form.Item
+            label="Subscription Plan"
+            name="subsType"
+            rules={[{ required: true, message: 'Please select the subscription plan!' }]}
+          >
+            <Select placeholder="Select subscription plan" onChange={handlePlanChange}>
+              {Array.isArray(subscriptionPlans?.data) &&
+                subscriptionPlans.data.map((plan: SubscriptionPlan) => (
+                  <Option key={plan._id} value={plan.name}>
+                    {plan.name.charAt(0).toUpperCase() + plan.name.slice(1)}
+                  </Option>
+                ))}
+            </Select>
+          </Form.Item>
+
+          {/* Show plan details (amount and duration) if a plan is selected */}
+          {selectedPlan && (
+            <div style={{ marginTop: '16px' }}>
+              <Text>
+                <strong>Amount:</strong> ${selectedPlan.amount}
+              </Text>
+              <br />
+              <Text>
+                <strong>Duration:</strong> {selectedPlan.duration}
+              </Text>
+            </div>
+          )}
+        </Form>
+      )}
     </Modal>
   );
 };

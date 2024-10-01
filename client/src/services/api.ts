@@ -101,6 +101,15 @@ export const appApis = createApi({
             
             })
         }),
+
+        getSubPlanDetails: builder.query({
+            query: () => ({
+                url: `subs-plan/plans`,
+                method: 'GET',
+            
+            })
+        }),
+        
         createSubscription: builder.mutation({
             query: (subsData) => ({
                 url: `subs/create`,
@@ -235,6 +244,7 @@ export const {
     useCreateNewAppMutation,
     useEditAppMutation,
     useUpdateProfileMutation,
-    useUpdatePasswordMutation
+    useUpdatePasswordMutation,
+    useGetSubPlanDetailsQuery
 } = appApis
 
