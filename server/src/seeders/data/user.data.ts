@@ -1,0 +1,48 @@
+
+export const users  = [
+    {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john@example.com',
+      password: 'password123',
+      avatar: 'https://cdn-icons-png.flaticon.com/128/1999/1999625.png',
+      role: 'app_owner',
+      status: 'active',
+    },
+    {
+      firstName: 'Jane',
+      lastName: 'Smith',
+      email: 'jane@example.com',
+      password: 'password123',
+      avatar: 'https://cdn-icons-png.flaticon.com/128/1999/1999625.png',
+      role: 'app_owner',
+      status: 'active',
+    },
+    {
+      firstName: 'Michael',
+      lastName: 'Johnson',
+      email: 'michael@example.com',
+      password: 'password123',
+      avatar: 'https://cdn-icons-png.flaticon.com/128/1999/1999625.png',
+      role: 'app_owner',
+      status: 'inactive',
+    },
+    {
+      firstName: 'Emily',
+      lastName: 'Davis',
+      email: 'emily@example.com',
+      password: 'password123',
+      avatar: 'https://cdn-icons-png.flaticon.com/128/1999/1999625.png',
+      role: 'app_owner',
+      status: 'active',
+    },
+    {
+      firstName: 'David',
+      lastName: 'Brown',
+      email: 'david@example.com',
+      password: 'password123',
+      avatar: 'https://cdn-icons-png.flaticon.com/128/1999/1999625.png',
+      role: 'app_owner',
+      status: 'block',
+    },
+  ];
