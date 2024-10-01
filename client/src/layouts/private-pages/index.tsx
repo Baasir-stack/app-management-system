@@ -8,9 +8,9 @@ const { Content } = Layout;
 const PrivateLayout = (): JSX.Element => {
   return (
     <Wrapper>
-      <Layout style={{ height: '100vh' }}>
+      <Layout style={{ height: '100vh',overflow:"hidden" }}>
         <Sidebar /> {/* Render the Sidebar on the left */}
-        <Layout style={{ flexGrow: 1 }}> {/* Allow this layout to grow and take up remaining space */}
+        <Layout style={{ flexGrow: 1,overflow:'scroll' }}> {/* Allow this layout to grow and take up remaining space */}
           <Content style={{ padding: '24px', background: '#fff' }}>
             <CardWrapper>
               <Outlet /> {/* Render the selected page content here */}
