@@ -5,11 +5,11 @@ import {
   resetPassword, 
   forgetPassword, 
   logoutUser
-} from '../controllers/auth.controller'; // Adjust the import path based on your project structure
+} from '../controllers/auth.controller'; 
 import {   validateRegister,
     validateLogin,
  
-    validateForgetPassword, } from '../middlewares/auth.validation'; // Optional validation middleware
+    validateForgetPassword, } from '../middlewares/auth.validation'; 
 import upload from '../config/multerConfig';
 import { validatePassword } from '../middlewares/global.middleware';
 import { verifyToken } from '../middlewares/verifyToken';

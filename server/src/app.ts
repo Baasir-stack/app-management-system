@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth.route";
 import appRoutes from "./routes/app.route";
 import subscriptionRoutes from "./routes/subscription.route";
 import userRoutes from "./routes/user.route";
+import subscriptionPlan from "./routes/subscription.plan.route";
 import errorMiddleware from "./middlewares/error"; 
 
 const app: Application = express();
@@ -25,6 +26,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/app", appRoutes);
 app.use('/api/subs', subscriptionRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/subs-plan', subscriptionPlan);
 
 // Error handling middleware
 app.use(errorMiddleware);
