@@ -3,7 +3,6 @@ import  { Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { IUser, UserModel } from '../interfaces/user.interface';
 
-// User schema definition
 const userSchema = new Schema<IUser, UserModel>(
   {
     firstName: {
@@ -46,31 +45,26 @@ const userSchema = new Schema<IUser, UserModel>(
     
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt fields
+    timestamps: true, 
   }
 );
 
-// Instance method to compare passwords
 userSchema.methods.isPasswordMatch = async function (password: string) {
-  // Await the comparison to get the result
-
 
   const isMatch = await bcrypt.compare(password, this.password);
  
-  return isMatch; // Return the result
+  return isMatch; 
 };
 
 userSchema.methods.hashPassword = async function (password: string) {
   return await bcrypt.hash(password, 10);
 };
 
-// Static method to check if email is taken
 userSchema.statics.isEmailTaken = async function (email: string, excludeUserId?: string) {
   const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
   return !!user;
 };
 
-// Pre-save middleware to hash password
 userSchema.pre('save', async function (next) {
   const user = this;
   if (user.isModified('password')) {
@@ -79,7 +73,7 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-// Create User model with schema and interface
+
 const User = model<IUser, UserModel>('User', userSchema);
 
 export default User;

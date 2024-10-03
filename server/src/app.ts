@@ -11,8 +11,8 @@ import errorMiddleware from "./middlewares/error";
 const app: Application = express();
 
 const corsOptions = {
-    origin: 'http://localhost:3000', // Frontend origin
-    credentials: true, // This allows the cookies/credentials to be sent
+    origin: 'http://localhost:3000', 
+    credentials: true, 
   }
 
 // Middleware

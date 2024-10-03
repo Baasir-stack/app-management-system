@@ -4,25 +4,25 @@ import {
   loginUser, 
   resetPassword, 
   forgetPassword, 
-  logoutUser
+  logoutUser,
+  validateResetToken
 } from '../controllers/auth.controller'; 
-import {   validateRegister,
-    validateLogin,
- 
-    validateForgetPassword, } from '../middlewares/auth.validation'; 
+import { validateAuthRequest} from '../middlewares/auth.middleware'; 
 import upload from '../config/multerConfig';
 import { validatePassword } from '../middlewares/global.middleware';
 import { verifyToken } from '../middlewares/verifyToken';
+import { forgetPasswordSchema, loginSchema, registerSchema } from '../validations/auth.validation';
 
 const router = Router();
 
-router.post('/register', upload.single("avatar") ,validateRegister,registerUser);
+router.post('/register', upload.single("avatar") ,validateAuthRequest(registerSchema),registerUser);
 
-router.post('/login', validateLogin, loginUser);
+router.post('/login', validateAuthRequest(loginSchema), loginUser);
 
 router.post('/reset-password/:token', validatePassword, resetPassword);
+router.post('/reset-password/validate/:token', validateResetToken);
 
-router.post('/forget-password', validateForgetPassword, forgetPassword);
+router.post('/forget-password', validateAuthRequest(forgetPasswordSchema), forgetPassword);
 
 
 router.post("/logout", verifyToken,logoutUser);

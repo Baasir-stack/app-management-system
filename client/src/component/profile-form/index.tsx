@@ -7,16 +7,16 @@ interface ProfileFormValues {
   firstName: string;
   lastName: string;
   email: string;
-  avatar: string; // You may want to keep this as a URL for the avatar
+  avatar: string; 
   role: string;
 }
 
 interface ProfileFormProps {
-  initialValues: ProfileFormValues; // Updated type
-  onFinish: (values: ProfileFormValues) => void; // Updated type
+  initialValues: ProfileFormValues; 
+  onFinish: (values: ProfileFormValues) => void; 
   onPasswordClick: () => void;
-  isEditing: boolean; // Add isEditing prop
-  onEditClick: () => void; // Add onEditClick prop
+  isEditing: boolean; 
+  onEditClick: () => void; 
 }
 
 const ProfileForm: React.FC<ProfileFormProps> = ({ initialValues, onFinish, onPasswordClick, isEditing, onEditClick }) => {
@@ -27,12 +27,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialValues, onFinish, onPa
   const handleAvatarChange = async (file: File) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      setAvatarPreview(reader.result as string); // Set the preview
-      form.setFieldsValue({ avatar: reader.result }); // Set the avatar in form state
+      setAvatarPreview(reader.result as string); 
+      form.setFieldsValue({ avatar: reader.result }); 
     };
     reader.readAsDataURL(file);
-    setUploadedFile(file); // Set the uploaded file
-    return false; // Prevent automatic upload
+    setUploadedFile(file); 
+    return false; 
   };
 
   return (
@@ -48,7 +48,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialValues, onFinish, onPa
           }}
         >
           <img
-            src={avatarPreview || initialValues.avatar} // Show preview or initial avatar
+            src={avatarPreview || initialValues.avatar} 
             alt="Avatar"
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
@@ -84,13 +84,13 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialValues, onFinish, onPa
         <Upload 
           beforeUpload={(file) => {
             handleAvatarChange(file);
-            return false; // Prevent automatic upload
+            return false; 
           }} 
           showUploadList={false}
         >
           <Button icon={<UploadOutlined />}>Upload Avatar</Button>
         </Upload>
-        {uploadedFile && <span style={{ marginLeft: '8px' }}>{uploadedFile.name}</span>} {/* Show file name */}
+        {uploadedFile && <span style={{ marginLeft: '8px' }}>{uploadedFile.name}</span>} 
       </Form.Item>
 
       <Form.Item label="Password">

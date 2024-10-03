@@ -4,7 +4,7 @@ import SubscriptionPlan from '../models/subscription.plan.model';
 
 export const getSubscriptionPlans = async (req: Request, res: Response) => {
   try {
-    const subscriptionPlans = await SubscriptionPlan.find(); 
+    const subscriptionPlans = await SubscriptionPlan.find().sort({amount:1}); 
 
     return res.status(200).json({
       success: true,

@@ -1,4 +1,4 @@
-import cloudinary from '../config/cloudinary'; // Adjust the path as necessary
+import cloudinary from '../config/cloudinary'; 
 import { Readable } from 'stream';
 
 export const uploadImageToCloudinary = (buffer: Buffer): Promise<string> => {
@@ -9,14 +9,14 @@ export const uploadImageToCloudinary = (buffer: Buffer): Promise<string> => {
         if (error) {
           return reject(new Error("Failed to upload image to Cloudinary"));
         }
-        resolve(result!.secure_url); // Return the secure URL
+        resolve(result!.secure_url); 
       }
     );
 
-    // Create a Readable stream from the buffer and pipe it to Cloudinary
+ 
     const stream = new Readable();
     stream.push(buffer);
-    stream.push(null); // Signal the end of the stream
+    stream.push(null); 
     stream.pipe(uploadStream);
   });
 };

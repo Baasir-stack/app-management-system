@@ -5,7 +5,7 @@ const subscriptionSchema = new Schema<ISubscription >(
     {
       subsType: {
         type: String,
-        enum: ['basic', 'standard', 'premium'], // Allowed subscription types
+        enum: ['basic', 'standard', 'premium'], 
         required: true,
       },
       subsStartDate: {
@@ -22,21 +22,20 @@ const subscriptionSchema = new Schema<ISubscription >(
       },
       appId: {
         type: Schema.Types.ObjectId,
-        ref: 'App', // Reference to the App model
+        ref: 'App', 
         required: true,
       },
       isExpired: {
         type: Boolean,
-        default: false, // Default to false when created
+        default: false, 
       },
     },
     {
-      timestamps: true, // Adds createdAt and updatedAt fields
+      timestamps: true, 
     }
   );
   
 
-  // Create Subscription model with schema and interface
 const Subscription = model<ISubscription>('Subscription', subscriptionSchema);
 
 export default Subscription;

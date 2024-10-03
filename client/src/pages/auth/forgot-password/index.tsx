@@ -1,7 +1,5 @@
 import ForgotPasswordForm from './form'
 
-
-
 const ForgotPassword = (): any => {
 
     return <ForgotPasswordForm />

@@ -8,14 +8,16 @@ import {
 } from '../controllers/app.controller'; 
 import { verifyToken } from '../middlewares/verifyToken';
 import { validateApp } from '../middlewares/global.middleware';
+import { AppSchema } from '../validations/global.validation';
+import { UpdateAppSchema } from '../validations/app.validation';
 
 const router = Router();
 
 router.use(verifyToken);
 
-router.post('/create', validateApp,createApp);
+router.post('/create', validateApp(AppSchema),createApp);
 
-router.patch('/update/:id', updateApp);
+router.patch('/update/:id', validateApp(UpdateAppSchema),updateApp);
 
 router.delete('/delete/:id', deleteApp);
 

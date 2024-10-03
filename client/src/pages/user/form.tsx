@@ -11,9 +11,9 @@ import { showSuccess, showError } from '../../services/toast';
 interface ProfileFormValues {
   firstName: string;
   lastName: string;
-  email: string; // Keep email in the interface but do not use it
+  email: string; 
   avatar: string;
-  role: string; // Keep role in the interface but do not use it
+  role: string; 
 }
 
 const UserPage = (): JSX.Element => {
@@ -26,7 +26,7 @@ const UserPage = (): JSX.Element => {
 
   const handleFinish = async (values: ProfileFormValues) => {
     try {
-      // Construct an object with only the fields you want to update
+      
       const { firstName, lastName, avatar } = values;
       const updatedProfileData = { firstName, lastName, avatar };
   

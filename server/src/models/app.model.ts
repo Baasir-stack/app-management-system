@@ -1,6 +1,6 @@
 import  { Schema, model } from 'mongoose';
 import { IApp } from '../interfaces/app.interface';
-// Schema for App
+
 const appSchema = new Schema<IApp>(
     {
       title: {
@@ -20,17 +20,16 @@ const appSchema = new Schema<IApp>(
       },
       userId: {
         type: Schema.Types.ObjectId,
-        ref: 'User', // Reference to User model
+        ref: 'User', 
         required: true,
       },
     },
     {
-      timestamps: true, // Adds createdAt and updatedAt fields
+      timestamps: true, 
     }
   );
 
 
-  // Create App model with schema and interface
 const App = model<IApp>('App', appSchema);
 
 export default App;

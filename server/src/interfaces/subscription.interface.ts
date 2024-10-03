@@ -1,6 +1,6 @@
 import { Document, Schema,  } from 'mongoose';
 
-// Interface for Subscription document
+
 export interface ISubscription extends Document {
   subsType: 'basic' | 'standard' | 'premium'; 
   subsStartDate: Date; 

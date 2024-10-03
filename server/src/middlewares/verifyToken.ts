@@ -12,7 +12,7 @@ export const verifyToken = (req: IRequestUser, res: Response, next: NextFunction
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string); // Ensure JWT_SECRET is a string
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string); 
 
     if (!decoded) {
       return res.status(401).json({ success: false, message: 'Unauthorized - invalid token' });
@@ -24,7 +24,7 @@ export const verifyToken = (req: IRequestUser, res: Response, next: NextFunction
 
 
 
-    req.userId = userId // Cast decoded to the expected type
+    req.userId = userId 
     next();
   } catch (error) {
     console.log('Error in verifyToken', error);

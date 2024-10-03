@@ -11,12 +11,12 @@ interface MailSender {
 export const transporter: Transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.GMAIL_USER as string, // Ensures it's typed as string
-    pass: process.env.GMAIL_PASS as string, // Ensures it's typed as string (Gmail password or App password)
+    user: process.env.GMAIL_USER as string, 
+    pass: process.env.GMAIL_PASS as string, 
   },
 });
 
 export const sender: MailSender = {
-  email: process.env.GMAIL_USER as string, // Ensures it's typed as string
+  email: process.env.GMAIL_USER as string, 
   name: "Baasir",
 };

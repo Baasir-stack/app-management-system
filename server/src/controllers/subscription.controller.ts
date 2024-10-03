@@ -124,22 +124,19 @@ export const deleteSubscription = catchAsyncError(async (req: Request, res: Resp
 export const getSubscriptionById = catchAsyncError(async (req: Request, res: Response) => {
     const { id } = req.params; 
 
-    // Fetch subscriptions associated with the appId
     const subscriptions = await Subscription.find({ appId: id });
 
-    // Check if subscriptions array is empty
     if (subscriptions.length === 0) {
-        return res.status(200).json({ success: true, subscriptions: [] }); // Return an empty array
+        return res.status(200).json({ success: true, subscriptions: [] }); 
     }
 
-    // Sort subscriptions by isExpired (false comes first, true comes later)
     const sortedSubscriptions = subscriptions.sort((a, b) => Number(a.isExpired) - Number(b.isExpired));
 
-    // Format the subsStartDate and subsEndDate dates for each subscription
+    
     const formattedSubscriptions = sortedSubscriptions.map(subscription => ({
-        ...subscription.toObject(), // Convert mongoose document to plain object
-        subsStartDate: formatDate(subscription.subsStartDate.toISOString()), // Format the start date
-        subsEndDate: formatDate(subscription.subsEndDate.toISOString()), // Format the end date
+        ...subscription.toObject(), 
+        subsStartDate: formatDate(subscription.subsStartDate.toISOString()), 
+        subsEndDate: formatDate(subscription.subsEndDate.toISOString()), 
     }));
 
     res.status(200).json({

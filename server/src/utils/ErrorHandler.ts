@@ -5,7 +5,6 @@ class ErrorHandler extends Error {
       super(message);
       this.statusCode = statusCode;
   
-      // Maintain proper stack trace for debugging
       Error.captureStackTrace(this, this.constructor);
     }
   }

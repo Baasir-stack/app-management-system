@@ -3,31 +3,70 @@
 import { LockOutlined } from '@ant-design/icons';
 import { Form, Input } from 'antd';
 import Button from '../../../component/button';
-import { showError, showSuccess } from '../../../services/toast'; // Import toast functions
-import { useNavigate } from 'react-router-dom';
-import { useResetPasswordMutation } from '../../../services/api'; // Import the hook
+import { showError, showSuccess } from '../../../services/toast'; 
+import { useNavigate, useParams } from 'react-router-dom';
+import { useResetPasswordMutation, useValidateResetPasswordTokenMutation } from '../../../services/api'; 
 import { useForm } from 'antd/es/form/Form';
+import { useEffect, useState } from 'react';
+import Splash from '../../splash';
 
 const ResetPasswordForm = (): JSX.Element => {
   const [form] = useForm();
   const navigate = useNavigate();
-  const [resetPassword] = useResetPasswordMutation(); // Initialize the hook
+  const { token } = useParams<{ token: string }>(); 
+  const [validateToken] = useValidateResetPasswordTokenMutation(); 
+  const [isValidToken, setIsValidToken] = useState<boolean | null>(null); 
+  const [resetPassword] = useResetPasswordMutation(); 
 
-  const onFinish = async (values: { password: string; confirmPassword: string }): Promise<void> => {
-    if (values.password !== values.confirmPassword) {
-      showError("Passwords do not match"); // Show error if passwords do not match
+  useEffect(() => {
+    const validate = async () => {
+      if (token) {
+        try {
+          const response = await validateToken(token).unwrap();
+          if (response.success) {
+            setIsValidToken(true); 
+          } else {
+            setIsValidToken(false); 
+          }
+        } catch (error: any) {
+          showError(error.data?.message || "Invalid or expired token");
+          setIsValidToken(false); 
+        
+        }
+      }
+    };
+    
+    validate();
+  }, [token, navigate, validateToken]);
+
+  const onFinish = async ({ password, confirmPassword }: { password: string; confirmPassword: string }): Promise<void> => {
+    if (password !== confirmPassword) {
+      showError("Passwords do not match");
       return;
     }
 
     try {
-      const response = await resetPassword({ password: values.password }).unwrap(); // Call reset password API
-      showSuccess(response.message || "Password reset successfully"); // Show success message
-      form.resetFields(); // Reset form fields
-      navigate('/login'); // Navigate to login page after success
+      const response = await resetPassword({ token, password, confirmPassword }).unwrap(); 
+      showSuccess(response.message || "Password reset successfully"); 
+      form.resetFields(); 
+      navigate('/'); 
     } catch (error: any) {
-      showError(error.data?.message || "Failed to reset password"); // Show error message
+      showError(error.data?.message || "Failed to reset password"); 
     }
   };
+
+  if (isValidToken === null) {
+    return <div style={{ textAlign: 'center', marginTop: '50px' }}><Splash/></div>; 
+  }
+
+  if (isValidToken === false) {
+    return (
+      <div style={{ textAlign: 'center', marginTop: '50px', color: 'red' }}>
+        <h2>Invalid or expired token</h2>
+        <p>Please request a new password reset link.</p>
+      </div>
+    );
+  }
 
   return (
     <Form form={form} onFinish={onFinish} style={{ maxWidth: '400px', margin: '0 auto', textAlign: 'center' }}>

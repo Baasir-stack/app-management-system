@@ -2,18 +2,17 @@
 import { Server } from 'http';
 
 export const setupGracefulShutdown = (server: Server) => {
-  // Handle unhandled promise rejections
   process.on('unhandledRejection', (err: any) => {
     console.error(`Unhandled Rejection: ${err.message}`);
     server.close(() => {
-      process.exit(1); // Exit with failure code
+      process.exit(1); 
     });
   });
 
   // Handle uncaught exceptions
   process.on('uncaughtException', (err: Error) => {
     console.error(`Uncaught Exception: ${err.message}`);
-    process.exit(1); // Exit with failure code
+    process.exit(1); 
   });
 
   // Graceful shutdown on SIGTERM/SIGINT

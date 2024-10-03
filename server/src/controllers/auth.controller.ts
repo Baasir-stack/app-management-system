@@ -1,16 +1,15 @@
 import { Request, Response } from "express";
-import User from "../models/user.model"; // Adjust the path accordingly
-import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie"; // Adjust the path accordingly
-import ErrorHandler from "../utils/ErrorHandler"; // Adjust the path accordingly
+import User from "../models/user.model"; 
+import { generateTokenAndSetCookie, validateToken } from "../utils/tokenHelper"; 
+import ErrorHandler from "../utils/ErrorHandler"; 
 import {  IUser } from "../interfaces/user.interface";
 import { uploadImageToCloudinary } from '../utils/handlingAvatar';
 import catchAsyncError from "../middlewares/catchAsyncError";
 import { sendPasswordResetEmail, sendResetSuccessEmail } from "../utils/emailHelperFunction";
-import { createActivationToken } from "../utils/generateToken";
+import { createActivationToken } from "../utils/tokenHelper";
 
 
 
-// Type guard for error handling
 const isErrorWithMessage = (error: unknown): error is { message: string } => {
   return (error as { message: string }).message !== undefined;
 };
@@ -50,7 +49,7 @@ export const registerUser = catchAsyncError(async (req: Request, res: Response) 
       firstName: newUser.firstName,
       lastName: newUser.lastName,
       email: newUser.email,
-      avatar: avatarUrl, // Use the URL from Cloudinary
+      avatar: avatarUrl, 
     },
   });
 });
@@ -123,11 +122,11 @@ export const forgetPassword = async (req: Request, res: Response) => {
     
     const resetToken = createActivationToken(user._id as string, "10m");
     user.resetPasswordToken = resetToken;
-    user.resetPasswordExpiresAt = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1 hour expiry
+    user.resetPasswordExpiresAt = new Date(Date.now() + 1 * 60 * 60 * 1000); 
     
     await user.save();
     
-    // Send reset email with token
+  
     await sendPasswordResetEmail(
       user.email,
       `${process.env.CLIENT_URL}/reset-password/${resetToken}`
@@ -152,12 +151,13 @@ export const forgetPassword = async (req: Request, res: Response) => {
  * @access  Public
 */
 
+
 export const resetPassword = async (req: Request, res: Response) => {
   try {
-    const { token } = req.params;
     const { password, confirmPassword } = req.body;
+    const {token} = req.params
 
-
+   
     if (password !== confirmPassword) {
       return res.status(400).json({
         success: false,
@@ -165,28 +165,24 @@ export const resetPassword = async (req: Request, res: Response) => {
       });
     }
 
+     const userId = validateToken(token); 
+     const user = await User.findById(userId);
   
-    const user = await User.findOne({
-      resetPasswordToken: token,
-      resetPasswordExpiresAt: { $gt: new Date() }, 
-    });
-
+    
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "Invalid or expired reset token.",
+        message: "User not found.",
       });
     }
 
-   
+  
     user.password = password;
-
-
     user.resetPasswordToken = undefined;
     user.resetPasswordExpiresAt = undefined;
-    await user.save(); 
+    await user.save();
 
-   
+ 
     await sendResetSuccessEmail(user.email);
 
     res.status(200).json({
@@ -211,18 +207,56 @@ export const resetPassword = async (req: Request, res: Response) => {
 
 
 /**
+ * @desc    Validate reset password token
+ * @route   GET /api/auth/reset-password/validate/:token
+ * @access  Public
+ */
+export const validateResetToken = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { token } = req.params;
+
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpiresAt: { $gt: new Date() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired reset token.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Token is valid.",
+      userId: user._id,
+    });
+  } catch (error) {
+    console.error('Error validating reset token:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+
+
+/**
  * @desc    Logout user (clears auth cookie)
  * @route   POST /api/auth/logout
  * @access  Private
  */
 export const logoutUser = catchAsyncError(async (req: Request, res: Response) => {
   try {
-    // Clear the JWT cookie by setting its expiry to a past date
+   
     res.cookie("token", "", {
       httpOnly: true,
-      expires: new Date(0), // Expire the cookie immediately
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Configure SameSite for CSRF protection
-      secure: process.env.NODE_ENV === "production", // Secure flag to send cookie only over HTTPS
+      expires: new Date(0), 
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", 
+      secure: process.env.NODE_ENV === "production", 
     });
 
     res.status(200).json({

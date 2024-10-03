@@ -2,8 +2,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Modal, Form, Select, FormInstance, Typography, Spin } from 'antd';
 import { useGetSubPlanDetailsQuery } from '../../../services/api'; // Adjust the import based on your setup
+import { showSuccess } from '../../../services/toast';
 
-// Define the type for a subscription plan
 interface SubscriptionPlan {
   _id: string;
   name: string;
@@ -24,16 +24,16 @@ const ReSubscribeModal: React.FC<ReSubscribeModalProps> = ({ visible, onOk, onCa
   const formRef = useRef<FormInstance | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
 
-  // Fetch subscription plan data using RTK Query hook
+  
   const { data: subscriptionPlans, isLoading } = useGetSubPlanDetailsQuery({});
 
   const handlePlanChange = (value: string) => {
-    const selected = subscriptionPlans?.data?.find((plan: SubscriptionPlan) => plan.name === value); // Access subscriptionPlans.data
+    const selected = subscriptionPlans?.data?.find((plan: SubscriptionPlan) => plan.name === value); 
     setSelectedPlan(selected || null);
   };
 
   useEffect(() => {
-    // Reset selected plan when modal is reopened
+   
     if (visible) {
       setSelectedPlan(null);
     }
@@ -50,6 +50,8 @@ const ReSubscribeModal: React.FC<ReSubscribeModalProps> = ({ visible, onOk, onCa
             .validateFields()
             .then((values: Record<string, any>) => {
               onOk(values);
+              showSuccess("App has been subscribed successfully")
+
               form.resetFields();
             })
             .catch((info: any) => {
@@ -78,7 +80,7 @@ const ReSubscribeModal: React.FC<ReSubscribeModalProps> = ({ visible, onOk, onCa
             </Select>
           </Form.Item>
 
-          {/* Show plan details (amount and duration) if a plan is selected */}
+      
           {selectedPlan && (
             <div style={{ marginTop: '16px' }}>
               <Text>

@@ -1,7 +1,6 @@
 import { Document, Model } from 'mongoose';
 import { Request } from 'express';
 
-// Interface for User document
 export interface IUser extends Document {
   firstName: string;
   lastName: string;
@@ -18,7 +17,6 @@ export interface IUser extends Document {
   hashPassword: (password: string) => Promise<string>;
 }
 
-// Static methods for User model
 export interface UserModel extends Model<IUser> {
   isEmailTaken: (email: string, excludeUserId?: string) => Promise<boolean>;
 }

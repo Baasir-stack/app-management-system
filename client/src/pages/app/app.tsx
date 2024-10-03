@@ -16,17 +16,17 @@ interface AppDetail {
   title: string;
   desc: string;
   status: string;
-  _id: string; // Change this to appId
+  appId: string; 
   createdAt: string;
 }
 
 const AppDetails = (): JSX.Element => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const { data, error, isLoading, refetch:refetchApps } = useGetAllAppsQuery(user?.id); // Get refetch function
+  const { data, error, isLoading, refetch:refetchApps } = useGetAllAppsQuery(user?.id); 
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const [appToDelete, setAppToDelete] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedApp, setSelectedApp] = useState<AppDetail | null>(null); // Track the selected app for editing
+  const [selectedApp, setSelectedApp] = useState<AppDetail | null>(null); 
   const navigate = useNavigate();
 
   const showConfirmationModal = (key: string) => {
@@ -37,8 +37,8 @@ const AppDetails = (): JSX.Element => {
   const handleDeleteConfirm = () => {
     if (appToDelete) {
       console.log(`Deleting app with key: ${appToDelete}`);
-      // Call your delete function here and then refetch
-      // After deletion, call refetch to refresh the app list
+    
+    
       refetchApps();
     }
     setIsConfirmVisible(false);
@@ -71,7 +71,7 @@ const AppDetails = (): JSX.Element => {
       dataIndex: 'subscription',
       key: 'subscription',
       render: (_subscription: string, record: AppDetail) => (
-        <Button type="link" onClick={() => navigate(`/subscription/${record._id}`)}>
+        <Button type="link" onClick={() => navigate(`/subscription/${record.appId}`)}>
           View Details
         </Button>
       ),
@@ -109,20 +109,20 @@ const AppDetails = (): JSX.Element => {
     showError(`${error}`);
   }
 
-  // Handle edit action
+
   const handleEdit = (record: AppDetail) => {
     setSelectedApp(record);
     setIsModalVisible(true);
   };
 
   const handleCreateNewApp = () => {
-    setSelectedApp(null); // Reset for new app creation
+    setSelectedApp(null); 
     setIsModalVisible(true);
   };
 
   const handleModalClose = () => {
     setIsModalVisible(false);
-    refetchApps(); // Refetch data when modal closes
+    refetchApps();
   };
 
   return (
@@ -134,16 +134,16 @@ const AppDetails = (): JSX.Element => {
       </div>
       <Table columns={columns} dataSource={data?.apps} />
 
-      {/* App Modal for Create/Edit */}
+    
       <AppModal
         visible={isModalVisible}
         onClose={handleModalClose}
         initialData={selectedApp ? { title: selectedApp.title, desc: selectedApp.desc, status: selectedApp.status === 'active' } : undefined}
-        appId={selectedApp?._id}
+        appId={selectedApp?.appId}
         refetchApps={refetchApps}
       />
 
-      {/* Confirmation Modal for Deletion */}
+    
       <ConfirmationModal
         visible={isConfirmVisible}
         onConfirm={handleDeleteConfirm}

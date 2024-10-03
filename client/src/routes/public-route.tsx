@@ -14,11 +14,10 @@ const PublicRoute = ({ component: Component, ...rest }: IPublicRoute): ReactNode
     return <Splash />
   }
 
-  const publicRoutes = ["/", "/register", "/forgot-password", "/reset-password"];
+  const publicRoutes = ["/", "/register", "/forgot-password", "/reset-password/:token"];
 
-  // Only redirect if user is authenticated and trying to access non-public routes
   if (authState.user && publicRoutes.includes(window.location.pathname)) {
-    return <Navigate to="/products" replace />;
+    return <Navigate to="/app" replace />;
   }
 
 

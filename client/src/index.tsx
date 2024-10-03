@@ -7,7 +7,7 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render( <ConfigProvider
     theme={{
       token: {
-        fontFamily: 'Montserrat, sans-serif',  // Override default Ant Design font
+        fontFamily: 'Montserrat, sans-serif',  
       },
     }}
   >

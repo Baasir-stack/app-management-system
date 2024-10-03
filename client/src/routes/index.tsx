@@ -3,8 +3,6 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 import PublicRoute from './public-route';
 import { Error404NotFound, Login, Register, ForgotPassword, ResetPassword, SubscriptionsPage } from '../pages';
-// import { useSelector } from 'react-redux';
-// import { RootState } from '../store';
 import { AuthLayout } from '../layouts';
 import { UserPage } from '../pages/user';
 import {AppDetails} from '../pages/app';
@@ -12,7 +10,7 @@ import PrivateLayout from '../layouts/private-pages';
 import PrivateRoute from './private-route';
 
 export default function Routes(): ReactNode {
-    // const { user } = useSelector((state: RootState) => state.auth);
+   
 
     const publicRoutes = [
         {
@@ -22,7 +20,7 @@ export default function Routes(): ReactNode {
                 { path: "", element: <Login /> },
                 { path: "/register", element: <Register /> },
                 { path: "/forgot-password", element: <ForgotPassword /> },
-                { path: "/reset-password", element: <ResetPassword /> },
+                { path: "/reset-password/:token", element: <ResetPassword /> },
             ],
         },
         {
@@ -32,25 +30,25 @@ export default function Routes(): ReactNode {
         { path: '404', element: <Error404NotFound /> },
     ];
 
-    // Define private routes for authenticated users
+    
     const privateRoutes = [
         {
             path: '/profile',
-            element: <PrivateRoute component={PrivateLayout} />, // Protect this route with PrivateRoute
+            element: <PrivateRoute component={PrivateLayout} />, 
             children: [
                 { path: '', element: <UserPage /> },
             ],
         },
         {
             path: '/app',
-            element: <PrivateRoute component={PrivateLayout} />, // Protect this route with PrivateRoute
+            element: <PrivateRoute component={PrivateLayout} />, 
             children: [
                 { path: '', element: <AppDetails /> },
             ],
         },
         {
             path: '/subscription/:appId',
-            element: <PrivateRoute component={PrivateLayout} />, // Protect this route with PrivateRoute
+            element: <PrivateRoute component={PrivateLayout} />, 
             children: [
                 { path: '', element: <SubscriptionsPage /> },
             ],

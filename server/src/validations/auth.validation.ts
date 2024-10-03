@@ -1,7 +1,5 @@
-// src/schemas/auth.schema.ts
 import Joi from 'joi';
 
-// Validation schema for user registration
 export const registerSchema = Joi.object({
   firstName: Joi.string().min(2).max(15).required().messages({
     'string.base': 'First name must be a string',
@@ -28,7 +26,6 @@ export const registerSchema = Joi.object({
   avatar: Joi.string().optional().allow(''), 
 });
 
-// Validation schema for user login
 export const loginSchema = Joi.object({
   email: Joi.string().email().required().messages({
     'string.base': 'Email must be a string',
@@ -43,7 +40,6 @@ export const loginSchema = Joi.object({
 
 
 
-// Validation schema for forgetting password
 export const forgetPasswordSchema = Joi.object({
   email: Joi.string().email().required().messages({
     'string.base': 'Email must be a string',

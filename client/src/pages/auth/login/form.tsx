@@ -67,7 +67,7 @@ const LoginForm = (): JSX.Element => {
         />
       </Form.Item>
       
-      {/* Forgot Password link */}
+   
       <Form.Item>
         <Link to="/forgot-password" style={{ float: 'right',marginTop:"-1.75rem" }}>Forgot password?</Link>
       </Form.Item>

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { AppSchema, passwordSchema } from "../validations/global.validation";
+import {  passwordSchema } from "../validations/global.validation";
+import Joi from "joi";
 
-// Middleware for validating reset password
 export const validatePassword = (req: Request, res: Response, next: NextFunction) => {
     const { error } = passwordSchema.validate(req.body);
     if (error) {
@@ -11,10 +11,14 @@ export const validatePassword = (req: Request, res: Response, next: NextFunction
 };
 
 
-export const validateApp = (req: Request, res: Response, next: NextFunction) => {
-  const { error } = AppSchema.validate(req.body);
-  if (error) {
-    return res.status(400).json({ message: error.details[0].message });
-  }
-  next();
+export const validateApp = (schema: Joi.ObjectSchema) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const { error } = schema.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res.status(400).json({
+        message: error.details.map((detail) => detail.message).join(', '),
+      });
+    }
+    next();
+  };
 };

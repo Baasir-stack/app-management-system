@@ -16,7 +16,7 @@ const PasswordModal: React.FC<PasswordModalProps> = ({ visible, onClose, onSubmi
     form.validateFields()
       .then((values) => {
         onSubmit(values);
-        form.resetFields(); // Reset form after submission
+        form.resetFields(); 
       })
       .catch(info => {
         console.log('Validation Failed:', info);

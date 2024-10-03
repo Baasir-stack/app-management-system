@@ -2,9 +2,6 @@ import User from '../models/app.model';
 import { hashPassword } from '../utils/hashPassword';
 import { users } from './data/user.data';
 
-
-
-
 export const seedUsers = async () => {
   try {
   

@@ -1,4 +1,3 @@
-// Mock subscription data for each app
 export const subscriptionData = [
     {
       subsType: 'basic',

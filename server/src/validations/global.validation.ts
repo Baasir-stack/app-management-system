@@ -1,6 +1,5 @@
 import Joi from "joi";
 
-// Validation schema for resetting password
 export const passwordSchema = Joi.object({
     password: Joi.string().min(8).required().messages({
       'string.base': 'Password must be a string',

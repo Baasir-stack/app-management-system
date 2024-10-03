@@ -1,4 +1,3 @@
-// Mock app data for 10 apps (2 apps per user)
 export const appData = [
     {
       title: 'Project Management App',

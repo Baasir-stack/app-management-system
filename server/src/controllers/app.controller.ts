@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import App from '../models/app.model'; // Adjust the path as necessary
-import catchAsyncError from '../middlewares/catchAsyncError'; // Middleware to handle async errors
+import App from '../models/app.model'; 
+import catchAsyncError from '../middlewares/catchAsyncError'; 
 import { IRequestUser } from '../../src/interfaces/user.interface';
 import { formatDate } from '../utils/dateFormatter';
 
@@ -97,7 +97,7 @@ export const deleteApp = catchAsyncError(async (req: Request, res: Response) => 
 export const getAppById = catchAsyncError(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const app = await App.findById(id).populate('userId', 'firstName lastName email'); // Populate user details if needed
+  const app = await App.findById(id).populate('userId', 'firstName lastName email'); 
 
   if (!app) {
     return res.status(404).json({ success: false, message: 'App not found' });
@@ -121,13 +121,12 @@ export const getAppById = catchAsyncError(async (req: Request, res: Response) =>
 export const getAllUserApps = catchAsyncError(async (req: Request, res: Response) => {
   const { userId } = req.params;
 
-  // Fetch apps for the user and sort by createdAt in descending order
-  const apps = await App.find({ userId }).sort({ createdAt: -1 }); // Sort in descending order
+  
+  const apps = await App.find({ userId }).sort({ createdAt: -1 }); 
 
-  // Format the createdAt date for each app
   const formattedApps = apps.map(app => ({
-    ...app.toObject(), // Convert mongoose document to plain object
-    createdAt: formatDate(app.createdAt.toISOString()), // Format the date as a string
+    ...app.toObject(), 
+    createdAt: formatDate(app.createdAt.toISOString()), 
   }));
 
   res.json({

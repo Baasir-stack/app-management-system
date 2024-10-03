@@ -33,7 +33,7 @@ const persistUserInLocalStorage = (user: IUser | null) => {
 };
 
 const initialState: IAuthInitialState = {
-  user: getUserFromLocalStorage(), // Load user from localStorage on init
+  user: getUserFromLocalStorage(), 
   isLoadingUser: false,
 };
 
@@ -43,11 +43,11 @@ const slice = createSlice({
   reducers: {
     setAuth: (state: IAuthInitialState, { payload }) => {
       state.user = payload.user;
-      persistUserInLocalStorage(payload.user); // Persist user in localStorage
+      persistUserInLocalStorage(payload.user);
     },
     logout: (state: IAuthInitialState) => {
       state.user = null;
-      persistUserInLocalStorage(null); // Clear user from localStorage on logout
+      persistUserInLocalStorage(null); 
     },
   },
   extraReducers: (builder) => {
@@ -58,7 +58,7 @@ const slice = createSlice({
       .addMatcher(appApis.endpoints.getUserInfo.matchFulfilled, (state: IAuthInitialState, { payload }) => {
         state.user = payload.user;
         state.isLoadingUser = false; 
-        persistUserInLocalStorage(payload.user); // Persist user info
+        persistUserInLocalStorage(payload.user); 
       })
       .addMatcher(appApis.endpoints.getUserInfo.matchRejected, (state: IAuthInitialState) => {
         state.user = null;
@@ -72,7 +72,7 @@ const slice = createSlice({
       .addMatcher(appApis.endpoints.login.matchFulfilled, (state: IAuthInitialState, { payload }) => {
         state.user = payload.user;
         state.isLoadingUser = false; 
-        persistUserInLocalStorage(payload.user); // Persist user info
+        persistUserInLocalStorage(payload.user); 
       })
       .addMatcher(appApis.endpoints.login.matchRejected, (state: IAuthInitialState) => {
         state.isLoadingUser = false; 
@@ -85,7 +85,7 @@ const slice = createSlice({
       .addMatcher(appApis.endpoints.logout.matchFulfilled, (state: IAuthInitialState) => {
         state.user = null;
         state.isLoadingUser = false; 
-        persistUserInLocalStorage(null); // Clear user on logout
+        persistUserInLocalStorage(null); 
       })
       .addMatcher(appApis.endpoints.logout.matchRejected, (state: IAuthInitialState) => {
         state.isLoadingUser = false; 
