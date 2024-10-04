@@ -1,12 +1,19 @@
 import Joi from "joi";
 
 export const passwordSchema = Joi.object({
-    password: Joi.string().min(8).required().messages({
-      'string.base': 'Password must be a string',
-      'string.empty': 'Password is required',
-      'string.min': 'Password must be at least 8 characters long',
-    }),
-    confirmPassword: Joi.string().valid(Joi.ref('password')).required().messages({
+  currentPassword: Joi.string().required().messages({
+    'string.base': 'Current password must be a string',
+    'string.empty': 'Current password is required',
+  }),
+  password: Joi.string().min(8).required().messages({
+    'string.base': 'Password must be a string',
+    'string.empty': 'Password is required',
+    'string.min': 'Password must be at least 8 characters long',
+  }),
+  confirmPassword: Joi.string()
+    .valid(Joi.ref('password'))
+    .required()
+    .messages({
       'any.only': 'Confirm Password must match Password',
       'string.empty': 'Confirm Password is required',
     }),

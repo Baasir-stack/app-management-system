@@ -9,6 +9,13 @@ declare global {
             [key: string]: any; 
           }
 
+          interface ErrorResponse {
+            data: {
+              message: string;
+            };
+          }
+          
+
    
 }
 

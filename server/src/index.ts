@@ -2,7 +2,6 @@ import app from './app';
 import { connectDB } from './config/db';
 import { setupGracefulShutdown } from './utils/gracefulShutdown';
 import { loadEnvironment } from './utils/env';
-import { runSeeders } from './seeders'; // Import your seeders
 import dotEnv from 'dotenv';
 
 dotEnv.config({
@@ -20,11 +19,6 @@ const startServer = async () => {
   try {
     await connectDB();
     
-
-    if (process.env.NODE_ENV !== 'production') {
-      await runSeeders(); 
-    }
-
     const server = app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });

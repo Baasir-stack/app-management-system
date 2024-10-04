@@ -3,9 +3,7 @@ import { Card } from 'antd';
 import { useState } from 'react';
 import ProfileForm from '../../component/profile-form';
 import PasswordModal from '../../component/modals/password-modal';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { useUpdateProfileMutation, useUpdatePasswordMutation } from '../../services/api'; 
+import { useUpdateProfileMutation, useUpdatePasswordMutation, useGetProfileDetailsQuery } from '../../services/api'; 
 import { showSuccess, showError } from '../../services/toast';
 
 interface ProfileFormValues {
@@ -19,21 +17,34 @@ interface ProfileFormValues {
 const UserPage = (): JSX.Element => {
   const [isPasswordModalVisible, setPasswordModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false); 
-  const { user } = useSelector((state: RootState) => state.auth);
+  const [getAvatar, setGetAvatar] = useState<File | string>(""); 
+  const [hasFormSubmit, setHasFormSubmit] = useState<boolean>(false); 
+  // const { user } = useSelector((state: RootState) => state.auth);
+  const { data:user, refetch:refetchUser } = useGetProfileDetailsQuery();  
+
   
   const [updateProfile] = useUpdateProfileMutation();
   const [updatePassword] = useUpdatePasswordMutation();
 
   const handleFinish = async (values: ProfileFormValues) => {
     try {
+      const { firstName, lastName } = values;
+
+      const formData = new FormData()
+
+      if( !firstName && !lastName && !getAvatar) return
       
-      const { firstName, lastName, avatar } = values;
-      const updatedProfileData = { firstName, lastName, avatar };
+      if (firstName) formData.append("firstName",firstName)
+        if (lastName) formData.append("lastName",lastName)
+      if(getAvatar) formData.append("avatar",getAvatar)
   
-      const response = await updateProfile({ updatedProfileData }).unwrap(); 
+      await updateProfile( formData ).unwrap(); 
       showSuccess('Profile updated successfully!'); 
-      console.log('Profile updated:', response);
+      await  refetchUser();
+      if(hasFormSubmit) setHasFormSubmit(false)
+      setHasFormSubmit(true)
       setIsEditing(false);
+
     } catch (error) {
       showError('Failed to update profile. Please try again.'); 
       console.error('Profile update error:', error);
@@ -41,11 +52,9 @@ const UserPage = (): JSX.Element => {
   };
   
 
-  const handlePasswordChange = async ({ password, confirmPassword }: { password: string; confirmPassword: string }) => {
+  const handlePasswordChange = async ({currentPassword ,password, confirmPassword }: {currentPassword:string ,password: string; confirmPassword: string }) => {
     try {
-      const response = await updatePassword({ password, confirmPassword }).unwrap(); 
-      showSuccess('Password changed successfully!'); 
-      console.log('Password change submitted:', response);
+       await updatePassword({ currentPassword,password, confirmPassword }).unwrap(); 
       setPasswordModalVisible(false);
     } catch (error) {
       showError('Failed to change password. Please try again.'); 
@@ -54,11 +63,11 @@ const UserPage = (): JSX.Element => {
   };
 
   const initialValues = {
-    firstName: user?.firstName || '',
-    lastName: user?.lastName || '',
-    email: user?.email || '',
-    avatar: user?.avatar || '',
-    role: user?.role || '',
+    firstName: user?.data.firstName || '',
+    lastName: user?.data.lastName || '',
+    email: user?.data.email || '',
+    avatar: user?.data.avatar || '',
+    role: user?.data.role || '',
   };
 
   const toggleEdit = () => {
@@ -83,6 +92,8 @@ const UserPage = (): JSX.Element => {
           onPasswordClick={() => setPasswordModalVisible(true)}
           isEditing={isEditing}
           onEditClick={toggleEdit} 
+          setGetAvatar = {setGetAvatar}
+          hasFormSubmit = {hasFormSubmit}  
         />
       </Card>
 

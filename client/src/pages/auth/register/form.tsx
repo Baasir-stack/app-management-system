@@ -7,6 +7,8 @@ import { useForm } from 'antd/es/form/Form'
 import { useState } from 'react'
 import { useRegisterMutation } from '../../../services/api'
 
+
+
 const RegisterForm = (): JSX.Element => {
   const [form] = useForm()
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
@@ -14,24 +16,26 @@ const RegisterForm = (): JSX.Element => {
     const navigate = useNavigate()
 
 
-  const onFinish = (values: any): void => {
-    const formData = new FormData()
-    formData.append('firstName', values.firstName)
-    formData.append('lastName', values.lastName)
-    formData.append('email', values.email)
-    formData.append('password', values.password)
-    if (avatarFile) formData.append('avatar', avatarFile)
-
-    register(formData).unwrap()
-      .then((fulfilled): void => {
-        showSuccess(fulfilled.message)
-        navigate('/')
-        form.resetFields()
-      })
-      .catch((rejected) => {
-        showError(rejected.data.message)
-      })
-  }
+    const onFinish = async (values: any): Promise<void> => {
+      const formData = new FormData();
+      formData.append('firstName', values.firstName);
+      formData.append('lastName', values.lastName);
+      formData.append('email', values.email);
+      formData.append('password', values.password);
+      if (avatarFile) formData.append('avatar', avatarFile);
+    
+      try {
+        const fulfilled = await register(formData).unwrap();
+    
+        showSuccess(fulfilled.message);
+        navigate('/');
+        form.resetFields();
+      } catch (rejected) {
+        const error = rejected as ErrorResponse; // Type assertion using the interface
+        showError(error.data.message);
+      }
+    };
+    
 
   const handleAvatarChange = (info: any) => {
     const file = info.file.originFileObj

@@ -2,7 +2,7 @@ import {  Response } from 'express';
 import User from '../models/user.model'; 
 import { IRequestUser } from '../../src/interfaces/user.interface';
 import { uploadImageToCloudinary } from '../utils/handlingAvatar';
-import cloudinary from '../config/cloudinary';
+import { isCurrentPasswordCorrect } from '../utils/checkingPassword';
 
 /**
  * @desc    change profile(first and last name)
@@ -36,8 +36,10 @@ export const getProfile = async (req: IRequestUser, res: Response) => {
  */
 export const updateProfile = async (req: IRequestUser, res: Response) => {
   try {
-    const { firstName, lastName, avatar } = req.body;
+    const { firstName, lastName } = req.body;
     const userId = req.userId;
+
+
 
     const user = await User.findById(userId);
 
@@ -53,14 +55,22 @@ export const updateProfile = async (req: IRequestUser, res: Response) => {
     user.lastName = lastName || user.lastName;
 
  
-    if (avatar) {
-      if (user.avatar) {
-        const publicId = user.avatar.split('/').pop().split('.')[0]; 
+    // if (avatar) {
+    //   if (user.avatar) {
+    //     const publicId = user.avatar.split('/').pop().split('.')[0]; 
 
-        await cloudinary.uploader.destroy(publicId);
-      }
-      const secureUrl = await uploadImageToCloudinary(Buffer.from(avatar, 'base64')); 
-      user.avatar = secureUrl; 
+    //     await cloudinary.uploader.destroy(publicId);
+    //   }
+    //   const secureUrl = await uploadImageToCloudinary(Buffer.from(avatar, 'base64')); 
+    //   user.avatar = secureUrl; 
+    // }
+    let avatarUrl = '';
+
+
+  
+    if (req.file) {
+      avatarUrl = await uploadImageToCloudinary(req.file.buffer); 
+      user.avatar = avatarUrl
     }
 
     await user.save();
@@ -90,7 +100,7 @@ export const updateProfile = async (req: IRequestUser, res: Response) => {
  */
 export const updatePassword = async (req: IRequestUser, res: Response) => {
   try {
-    const { password, confirmPassword } = req.body;
+    const { currentPassword, password, confirmPassword } = req.body; 
     const userId = req.userId; 
 
     if (password !== confirmPassword) {
@@ -109,7 +119,15 @@ export const updatePassword = async (req: IRequestUser, res: Response) => {
       });
     }
 
-    user.password = password;
+    const isMatch = await isCurrentPasswordCorrect(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Current password is incorrect.",
+      });
+    }
+
+    user.password = password; 
 
     await user.save();
 

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Form, Input, Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import {  useState } from 'react';
+import {  useEffect, useState } from 'react';
 
 interface ProfileFormValues {
   firstName: string;
@@ -17,9 +17,12 @@ interface ProfileFormProps {
   onPasswordClick: () => void;
   isEditing: boolean; 
   onEditClick: () => void; 
+  setGetAvatar: (value: File | string) => void
+  hasFormSubmit: boolean
 }
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ initialValues, onFinish, onPasswordClick, isEditing, onEditClick }) => {
+const ProfileForm: React.FC<ProfileFormProps> = ({ initialValues, onFinish, onPasswordClick, isEditing, onEditClick, setGetAvatar,  hasFormSubmit }) => {
+
   const [form] = Form.useForm();
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -32,8 +35,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialValues, onFinish, onPa
     };
     reader.readAsDataURL(file);
     setUploadedFile(file); 
+    setGetAvatar(file)
     return false; 
   };
+
+  useEffect(() =>{
+    if (hasFormSubmit) setAvatarPreview(null)
+  },[hasFormSubmit])
+
 
   return (
     <Form form={form} layout="vertical" initialValues={initialValues} onFinish={onFinish} style={{ marginTop: '16px' }}>
@@ -48,7 +57,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialValues, onFinish, onPa
           }}
         >
           <img
-            src={avatarPreview || initialValues.avatar} 
+            src={avatarPreview ?? initialValues.avatar} 
             alt="Avatar"
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />

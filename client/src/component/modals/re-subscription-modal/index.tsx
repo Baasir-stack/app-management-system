@@ -39,26 +39,25 @@ const ReSubscribeModal: React.FC<ReSubscribeModalProps> = ({ visible, onOk, onCa
     }
   }, [visible]);
 
+  const handleOk = async () => {
+    const form = formRef.current;
+    if (form) {
+      try {
+        const values = await form.validateFields();
+        await onOk(values); 
+        showSuccess("App has been subscribed successfully");
+        form.resetFields();
+      } catch (info) {
+        console.log('Validate Failed:', info);
+      }
+    }
+  };
+
   return (
     <Modal
       title="Subscribe"
       visible={visible}
-      onOk={() => {
-        const form = formRef.current;
-        if (form) {
-          form
-            .validateFields()
-            .then((values: Record<string, any>) => {
-              onOk(values);
-              showSuccess("App has been subscribed successfully")
-
-              form.resetFields();
-            })
-            .catch((info: any) => {
-              console.log('Validate Failed:', info);
-            });
-        }
-      }}
+      onOk={handleOk}
       onCancel={onCancel}
     >
       {isLoading ? (

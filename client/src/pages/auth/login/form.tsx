@@ -12,19 +12,20 @@ const LoginForm = (): JSX.Element => {
   const navigate = useNavigate()
   const [login,{isLoading}] = useLoginMutation()
 
-  const onFinish = (values: IKeyValue): void => {
-    login(values).unwrap()
-      .then((fulfilled): void => {
-    
-        navigate('/app')
-      
-        showSuccess(fulfilled.message)
-        form.resetFields()
-      })
-      .catch((rejected) => {
-        showError(rejected.data.message)
-      })
-  }
+  const onFinish = async (values: IKeyValue): Promise<void> => {
+    try {
+      const fulfilled = await login(values).unwrap();
+  
+      navigate('/app');
+      showSuccess(fulfilled.message);
+      form.resetFields();
+    } catch (rejected) {
+      const error = rejected as ErrorResponse; 
+  
+      // Ensure the message is correctly interpolated
+      showError(error.data.message);
+    }
+  };
 
   return (
     <Form

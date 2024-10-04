@@ -14,6 +14,9 @@ export const appApis = createApi({
         getUserInfo: builder.query<any, void>({
             query: () => 'users/me'
         }),
+        getProfileDetails: builder.query<any, void>({
+            query: () => 'users/me'
+        }),
     
        
         login: builder.mutation({
@@ -102,6 +105,14 @@ export const appApis = createApi({
             
             })
         }),
+        deleteApp: builder.mutation({
+            query: (appId) => ({
+                url: `app/delete/${appId}`,
+                method: 'DELETE',
+              
+            
+            })
+        }),
         editApp: builder.mutation({
             query: ({ appData, appId }: { appData: any; appId: string }) => ({
               url: `app/update/${appId}`, // no need for ':'
@@ -111,7 +122,7 @@ export const appApis = createApi({
         }),
 
         updateProfile: builder.mutation({
-            query: ({ updatedProfileData }: { updatedProfileData: any;  }) => ({
+            query: (updatedProfileData) =>  ({
               url: `users/me`,
               method: 'PATCH',
               body: updatedProfileData
@@ -119,10 +130,11 @@ export const appApis = createApi({
         }),
 
         updatePassword: builder.mutation({
-            query: ({ password, confirmPassword  }: { password:string, confirmPassword :string }) => ({
+            query: ({ currentPassword,password, confirmPassword  }: {currentPassword:string ,password:string, confirmPassword :string }) => ({
               url: `users/me/password`,
               method: 'PUT',
               body: {
+                currentPassword,
                 password,
                 confirmPassword
               }
@@ -150,6 +162,8 @@ export const {
     useEditAppMutation,
     useUpdateProfileMutation,
     useUpdatePasswordMutation,
-    useGetSubPlanDetailsQuery
+    useGetSubPlanDetailsQuery,
+    useGetProfileDetailsQuery,
+    useDeleteAppMutation
 } = appApis
 

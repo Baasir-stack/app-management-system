@@ -5,10 +5,9 @@ import { useState } from 'react';
 import ConfirmationModal from '../../component/modals/delete-app-modal';
 import AppModal from '../../component/modals/app-modal'; // Import your AppModal here
 import { useSelector } from 'react-redux';
-import { showError } from '../../services/toast';
+import { showError, showSuccess } from '../../services/toast';
 import { RootState } from '../../store';
-import { useGetAllAppsQuery } from '../../services/api';
-import Splash from '../splash';
+import { useCreateNewAppMutation, useDeleteAppMutation, useEditAppMutation, useGetAllAppsQuery } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 
 interface AppDetail {
@@ -16,29 +15,32 @@ interface AppDetail {
   title: string;
   desc: string;
   status: string;
-  appId: string; 
+  _id: string; 
   createdAt: string;
 }
 
 const AppDetails = (): JSX.Element => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const { data, error, isLoading, refetch:refetchApps } = useGetAllAppsQuery(user?.id); 
+  const { data, error, isLoading:fetchLoading, refetch:refetchApps } = useGetAllAppsQuery(user?.id); 
+  const [ deleteApp,{isLoading:delLoading} ] = useDeleteAppMutation(); 
+  const [ ,{isLoading:createLoading} ] = useCreateNewAppMutation(); 
+  const [ ,{isLoading:editLoading} ] = useEditAppMutation(); 
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const [appToDelete, setAppToDelete] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedApp, setSelectedApp] = useState<AppDetail | null>(null); 
   const navigate = useNavigate();
-
-  const showConfirmationModal = (key: string) => {
-    setAppToDelete(key);
+  
+  
+  const showConfirmationModal = (appId: string) => {
+    setAppToDelete(appId);
     setIsConfirmVisible(true);
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async() => {
     if (appToDelete) {
-      console.log(`Deleting app with key: ${appToDelete}`);
-    
-    
+     await deleteApp(appToDelete)
+    showSuccess("App has been deleted successfully!.")
       refetchApps();
     }
     setIsConfirmVisible(false);
@@ -71,7 +73,7 @@ const AppDetails = (): JSX.Element => {
       dataIndex: 'subscription',
       key: 'subscription',
       render: (_subscription: string, record: AppDetail) => (
-        <Button type="link" onClick={() => navigate(`/subscription/${record.appId}`)}>
+        <Button type="link" onClick={() => navigate(`/subscription/${record._id}`)}>
           View Details
         </Button>
       ),
@@ -94,16 +96,12 @@ const AppDetails = (): JSX.Element => {
           <Button
             icon={<DeleteOutlined />}
             danger
-            onClick={() => showConfirmationModal(record.key)}
+            onClick={() => showConfirmationModal(record._id)}
           />
         </>
       ),
     },
   ];
-
-  if (isLoading) {
-    return <Splash />;
-  }
 
   if (error) {
     showError(`${error}`);
@@ -132,14 +130,14 @@ const AppDetails = (): JSX.Element => {
           Create New App
         </Button>
       </div>
-      <Table columns={columns} dataSource={data?.apps} />
+      <Table columns={columns} dataSource={data?.apps} loading={delLoading ?? createLoading ?? editLoading ?? fetchLoading } />
 
     
       <AppModal
         visible={isModalVisible}
         onClose={handleModalClose}
         initialData={selectedApp ? { title: selectedApp.title, desc: selectedApp.desc, status: selectedApp.status === 'active' } : undefined}
-        appId={selectedApp?.appId}
+        appId={selectedApp?._id}
         refetchApps={refetchApps}
       />
 

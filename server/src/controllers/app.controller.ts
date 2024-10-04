@@ -3,6 +3,7 @@ import App from '../models/app.model';
 import catchAsyncError from '../middlewares/catchAsyncError'; 
 import { IRequestUser } from '../../src/interfaces/user.interface';
 import { formatDate } from '../utils/dateFormatter';
+import Subscription from '../models/subscription.model';
 
 
 
@@ -75,6 +76,8 @@ export const deleteApp = catchAsyncError(async (req: Request, res: Response) => 
   const { id } = req.params;
 
   const deletedApp = await App.findByIdAndDelete(id);
+
+  await Subscription.findByIdAndDelete({appId:id});
 
   if (!deletedApp) {
     return res.status(404).json({ success: false, message: 'App not found' });

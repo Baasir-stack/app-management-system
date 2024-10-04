@@ -22,9 +22,6 @@ COPY . .
 # Copy environment variables file
 COPY .env .env
 
-# Add seeders to the MongoDB database
-RUN yarn seed
-
 # Expose the port the app runs on
 EXPOSE 8000
 

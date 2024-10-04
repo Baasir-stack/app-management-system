@@ -32,6 +32,7 @@ export const registerUser = catchAsyncError(async (req: Request, res: Response) 
 
   let avatarUrl = '';
 
+
   
   if (req.file) {
     avatarUrl = await uploadImageToCloudinary(req.file.buffer); 

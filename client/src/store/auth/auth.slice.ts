@@ -52,18 +52,18 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addMatcher(appApis.endpoints.getUserInfo.matchPending, (state: IAuthInitialState) => {
-        state.isLoadingUser = true; 
-      })
+      // .addMatcher(appApis.endpoints.getUserInfo.matchPending, (state: IAuthInitialState) => {
+      //   state.isLoadingUser = true; 
+      // })
       .addMatcher(appApis.endpoints.getUserInfo.matchFulfilled, (state: IAuthInitialState, { payload }) => {
         state.user = payload.user;
         state.isLoadingUser = false; 
         persistUserInLocalStorage(payload.user); 
       })
-      .addMatcher(appApis.endpoints.getUserInfo.matchRejected, (state: IAuthInitialState) => {
-        state.user = null;
-        state.isLoadingUser = false; 
-      });
+      // .addMatcher(appApis.endpoints.getUserInfo.matchRejected, (state: IAuthInitialState) => {
+      //   state.user = null;
+      //   state.isLoadingUser = false; 
+      // });
 
     builder
       .addMatcher(appApis.endpoints.login.matchPending, (state: IAuthInitialState) => {

@@ -6,21 +6,20 @@ import { Modal, Form, Input } from 'antd';
 interface PasswordModalProps {
   visible: boolean;
   onClose: () => void;
-  onSubmit: (values: { password: string; confirmPassword: string }) => void;
+  onSubmit: (values: { currentPassword:string ,password: string; confirmPassword: string }) => void;
 }
 
 const PasswordModal: React.FC<PasswordModalProps> = ({ visible, onClose, onSubmit }) => {
   const [form] = Form.useForm();
 
-  const handleOk = () => {
-    form.validateFields()
-      .then((values) => {
-        onSubmit(values);
-        form.resetFields(); 
-      })
-      .catch(info => {
-        console.log('Validation Failed:', info);
-      });
+  const handleOk = async () => {
+    try {
+      const values = await form.validateFields();
+      onSubmit(values);
+      form.resetFields();
+    } catch (info) {
+      console.log('Validation Failed:', info);
+    }
   };
 
   return (
@@ -33,8 +32,14 @@ const PasswordModal: React.FC<PasswordModalProps> = ({ visible, onClose, onSubmi
     >
       <Form form={form}>
         <Form.Item
+          name="currentPassword"
+          rules={[{ required: true, message: 'Please input your current password!' }]}
+        >
+          <Input.Password placeholder="Current Password" />
+        </Form.Item>
+        <Form.Item
           name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
+          rules={[{ required: true, message: 'Please input your new password!' }]}
         >
           <Input.Password placeholder="New Password" />
         </Form.Item>
@@ -45,8 +50,7 @@ const PasswordModal: React.FC<PasswordModalProps> = ({ visible, onClose, onSubmi
           <Input.Password placeholder="Confirm Password" />
         </Form.Item>
       </Form>
-    </Modal>
-  );
+    </Modal>  );
 };
 
 export default PasswordModal;
