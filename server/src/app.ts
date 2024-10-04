@@ -11,7 +11,7 @@ import errorMiddleware from "./middlewares/error";
 const app: Application = express();
 
 const corsOptions = {
-    origin: process.env.REACT_APP_URL, 
+    origin: process.env.CLIENT_URL, 
     credentials: true, 
   }
 
