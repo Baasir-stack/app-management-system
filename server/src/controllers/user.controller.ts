@@ -3,6 +3,7 @@ import User from '../models/user.model';
 import { IRequestUser } from '../../src/interfaces/user.interface';
 import { uploadImageToCloudinary } from '../utils/handlingAvatar';
 import { isCurrentPasswordCorrect } from '../utils/checkingPassword';
+import { MulterRequest } from '../interfaces/global.interface';
 
 /**
  * @desc    change profile(first and last name)
@@ -51,25 +52,18 @@ export const updateProfile = async (req: IRequestUser, res: Response) => {
     }
 
   
-    user.firstName = firstName || user.firstName;
-    user.lastName = lastName || user.lastName;
+    user.firstName = firstName ?? user.firstName;
+    user.lastName = lastName ?? user.lastName;
 
  
-    // if (avatar) {
-    //   if (user.avatar) {
-    //     const publicId = user.avatar.split('/').pop().split('.')[0]; 
-
-    //     await cloudinary.uploader.destroy(publicId);
-    //   }
-    //   const secureUrl = await uploadImageToCloudinary(Buffer.from(avatar, 'base64')); 
-    //   user.avatar = secureUrl; 
-    // }
+ 
     let avatarUrl = '';
 
+    const documentFile  = (req as unknown as MulterRequest).file;
 
   
-    if (req.file) {
-      avatarUrl = await uploadImageToCloudinary(req.file.buffer); 
+    if (documentFile) {
+      avatarUrl = await uploadImageToCloudinary(documentFile.buffer); 
       user.avatar = avatarUrl
     }
 

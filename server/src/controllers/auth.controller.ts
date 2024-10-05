@@ -7,6 +7,7 @@ import { uploadImageToCloudinary } from '../utils/handlingAvatar';
 import catchAsyncError from "../middlewares/catchAsyncError";
 import { sendPasswordResetEmail, sendResetSuccessEmail } from "../utils/emailHelperFunction";
 import { createActivationToken } from "../utils/tokenHelper";
+import { MulterRequest } from "../interfaces/global.interface";
 
 
 
@@ -31,11 +32,12 @@ export const registerUser = catchAsyncError(async (req: Request, res: Response) 
   }
 
   let avatarUrl = '';
+  const documentFile  = (req as unknown as MulterRequest).file;
 
 
   
-  if (req.file) {
-    avatarUrl = await uploadImageToCloudinary(req.file.buffer); 
+  if (documentFile) {
+    avatarUrl = await uploadImageToCloudinary(documentFile.buffer); 
   }
 
   // Create new user
