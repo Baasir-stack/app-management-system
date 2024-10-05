@@ -3,7 +3,7 @@ import { getProfile, updatePassword , updateProfile} from '../controllers/user.c
 import { verifyToken } from '../middlewares/verifyToken';
 import { validateUpdateProfile } from '../middlewares/user.middleware';
 import { validatePassword } from '../middlewares/global.middleware';
-import upload from '../config/multerConfig';
+import upload from '../config/multer.config';
 
 const router = Router();
 

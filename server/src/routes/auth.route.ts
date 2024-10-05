@@ -8,7 +8,7 @@ import {
   validateResetToken
 } from '../controllers/auth.controller'; 
 import { validateAuthRequest} from '../middlewares/auth.middleware'; 
-import upload from '../config/multerConfig';
+import upload from '../config/multer.config';
 import { validatePassword } from '../middlewares/global.middleware';
 import { verifyToken } from '../middlewares/verifyToken';
 import { forgetPasswordSchema, loginSchema, registerSchema } from '../validations/auth.validation';
