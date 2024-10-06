@@ -127,6 +127,11 @@ export const getAllUserApps = catchAsyncError(async (req: Request, res: Response
   
   const apps = await App.find({ userId }).sort({ createdAt: -1 }); 
 
+  if (!apps?.length) return res.status(200).json({
+    success: true,
+    message:"User apps not found!"
+  })
+
   const formattedApps = apps.map(app => ({
     ...app.toObject(), 
     createdAt: formatDate(app.createdAt.toISOString()), 

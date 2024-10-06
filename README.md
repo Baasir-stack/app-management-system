@@ -34,8 +34,3 @@ If you don't have Docker installed, you can install it by following the instruct
    ```bash
    http://localhost:3000
    ```
-
-4. **Deployed Url**:
-
-Deployed url of the app is below
-[Deployed url](https://app-management-system.netlify.app/)
