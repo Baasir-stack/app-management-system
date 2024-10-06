@@ -31,4 +31,8 @@ app.use('/api/subs-plan', subscriptionPlan);
 // Error handling middleware
 app.use(errorMiddleware);
 
+app.get("/", (req, res) => {
+  res.send("Welcome to the API");
+});
+
 export default app;

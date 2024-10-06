@@ -1,6 +1,6 @@
 import {  Response } from 'express';
 import User from '../models/user.model'; 
-import { IRequestUser } from '../../src/interfaces/user.interface';
+import { IRequestUser } from '../interfaces/user.interface';
 import { uploadImageToCloudinary } from '../utils/handlingAvatar';
 import { isCurrentPasswordCorrect } from '../utils/checkingPassword';
 import { MulterRequest } from '../interfaces/global.interface';

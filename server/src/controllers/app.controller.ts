@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import App from '../models/app.model'; 
 import catchAsyncError from '../middlewares/catchAsyncError'; 
-import { IRequestUser } from '../../src/interfaces/user.interface';
+import { IRequestUser } from '../interfaces/user.interface';
 import { formatDate } from '../utils/dateFormatter';
 import Subscription from '../models/subscription.model';
 

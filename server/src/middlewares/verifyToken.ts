@@ -1,6 +1,6 @@
 import {  Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { IRequestUser } from '../../src/interfaces/user.interface';
+import { IRequestUser } from '../interfaces/user.interface';
 
 export const verifyToken = (req: IRequestUser, res: Response, next: NextFunction) => {
     const token = req.cookies.token;

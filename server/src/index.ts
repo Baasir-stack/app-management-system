@@ -14,6 +14,7 @@ loadEnvironment();
 // Define the port from environment variables
 const PORT = process.env.PORT || 8000;
 
+
 // Start the server with a DB connection
 const startServer = async () => {
   try {
