@@ -103,9 +103,6 @@ const AppDetails = (): JSX.Element => {
     },
   ];
 
-  if (error) {
-    showError(`${error}`);
-  }
 
 
   const handleEdit = (record: AppDetail) => {
