@@ -21,7 +21,7 @@ interface AppDetail {
 
 const AppDetails = (): JSX.Element => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const { data, error, isLoading:fetchLoading, refetch:refetchApps } = useGetAllAppsQuery(user?.id); 
+  const { data,  isLoading:fetchLoading, refetch:refetchApps } = useGetAllAppsQuery(user?.id); 
   const [ deleteApp,{isLoading:delLoading} ] = useDeleteAppMutation(); 
   const [ ,{isLoading:createLoading} ] = useCreateNewAppMutation(); 
   const [ ,{isLoading:editLoading} ] = useEditAppMutation(); 
