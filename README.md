@@ -19,3 +19,23 @@ If you don't have Docker installed, you can install it by following the instruct
    ```bash
    git clone https://github.com/your-repo/app-management-backend.git
    ```
+
+2. **Run the below docker command**:  
+   After clone the repository run below command of the docker to run the application in local environment:
+
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Access the app locally**:
+
+   After the containers are up, you can access the app at:
+
+   ```bash
+   http://localhost:3000
+   ```
+
+4. **Deployed Url**:
+
+Deployed url of the app is below
+[Deployed url](https://app-management-system.netlify.app/)
