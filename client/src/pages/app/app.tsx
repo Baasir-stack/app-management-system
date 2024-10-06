@@ -5,7 +5,7 @@ import { useState } from 'react';
 import ConfirmationModal from '../../component/modals/delete-app-modal';
 import AppModal from '../../component/modals/app-modal'; // Import your AppModal here
 import { useSelector } from 'react-redux';
-import { showError, showSuccess } from '../../services/toast';
+import { showSuccess } from '../../services/toast';
 import { RootState } from '../../store';
 import { useCreateNewAppMutation, useDeleteAppMutation, useEditAppMutation, useGetAllAppsQuery } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
