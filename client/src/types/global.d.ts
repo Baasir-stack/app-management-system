@@ -14,6 +14,12 @@ declare global {
               message: string;
             };
           }
+
+          interface SuccessResponse {
+            data: {
+              message: string;
+            };
+          }
           
 
    

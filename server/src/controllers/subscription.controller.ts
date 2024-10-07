@@ -137,6 +137,7 @@ export const getSubscriptionById = catchAsyncError(async (req: Request, res: Res
         ...subscription.toObject(), 
         subsStartDate: formatDate(subscription.subsStartDate.toISOString()), 
         subsEndDate: formatDate(subscription.subsEndDate.toISOString()), 
+        createdAt: formatDate(subscription.createdAt.toISOString()), 
     }));
 
     res.status(200).json({

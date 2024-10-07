@@ -23,8 +23,8 @@ const UserPage = (): JSX.Element => {
   const { data:user, refetch:refetchUser } = useGetProfileDetailsQuery();  
 
   
-  const [updateProfile] = useUpdateProfileMutation();
-  const [updatePassword] = useUpdatePasswordMutation();
+  const [updateProfile,{isLoading:updateProfileLoader}] = useUpdateProfileMutation();
+  const [updatePassword,{isLoading:updatePasswordLoader}] = useUpdatePasswordMutation();
 
   const handleFinish = async (values: ProfileFormValues) => {
     try {
@@ -45,6 +45,7 @@ const UserPage = (): JSX.Element => {
       setHasFormSubmit(true)
       setIsEditing(false);
 
+
     } catch (error) {
       showError('Failed to update profile. Please try again.'); 
       console.error('Profile update error:', error);
@@ -54,10 +55,13 @@ const UserPage = (): JSX.Element => {
 
   const handlePasswordChange = async ({currentPassword ,password, confirmPassword }: {currentPassword:string ,password: string; confirmPassword: string }) => {
     try {
-       await updatePassword({ currentPassword,password, confirmPassword }).unwrap(); 
-      setPasswordModalVisible(false);
+      const response = await updatePassword({ currentPassword,password, confirmPassword }).unwrap(); 
+       setPasswordModalVisible(false);
+       console.log(response)
+       showSuccess(`${response?.message}`); 
     } catch (error) {
-      showError('Failed to change password. Please try again.'); 
+      const { data } = error as ErrorResponse; // Use the defined interface
+      showError(`${data?.message || 'An error occurred'}`);
       console.error('Password change error:', error);
     }
   };
@@ -94,6 +98,8 @@ const UserPage = (): JSX.Element => {
           onEditClick={toggleEdit} 
           setGetAvatar = {setGetAvatar}
           hasFormSubmit = {hasFormSubmit}  
+          loader={updateProfileLoader}
+          updatePasswordLoader={updatePasswordLoader}
         />
       </Card>
 

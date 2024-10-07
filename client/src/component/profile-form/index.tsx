@@ -2,6 +2,9 @@
 import { Form, Input, Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import {  useEffect, useState } from 'react';
+import { Splash } from '../../pages';
+import './style'
+import { LoaderOverlay } from './style';
 
 interface ProfileFormValues {
   firstName: string;
@@ -19,9 +22,11 @@ interface ProfileFormProps {
   onEditClick: () => void; 
   setGetAvatar: (value: File | string) => void
   hasFormSubmit: boolean
+  loader:boolean
+  updatePasswordLoader:boolean
 }
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ initialValues, onFinish, onPasswordClick, isEditing, onEditClick, setGetAvatar,  hasFormSubmit }) => {
+const ProfileForm: React.FC<ProfileFormProps> = ({ initialValues, onFinish, onPasswordClick, isEditing, onEditClick, setGetAvatar,  hasFormSubmit,loader,updatePasswordLoader }) => {
 
   const [form] = Form.useForm();
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -39,13 +44,27 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialValues, onFinish, onPa
     return false; 
   };
 
+
   useEffect(() =>{
-    if (hasFormSubmit) setAvatarPreview(null)
+    if (hasFormSubmit) {
+      setAvatarPreview(null)
+      setUploadedFile(null)
+    }
   },[hasFormSubmit])
 
 
+  useEffect(() => {
+    form.setFieldsValue(initialValues);
+    setAvatarPreview(initialValues.avatar);
+  }, [initialValues, form]);
+
+
+
   return (
-    <Form form={form} layout="vertical" initialValues={initialValues} onFinish={onFinish} style={{ marginTop: '16px' }}>
+    
+      <>
+      {(loader ?? updatePasswordLoader )&& <LoaderOverlay><Splash/></LoaderOverlay>}
+      <Form form={form} layout="vertical" initialValues={initialValues} onFinish={onFinish}  style={{ marginTop: '16px',position:"relative" }}>
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
         <div
           style={{
@@ -116,12 +135,15 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ initialValues, onFinish, onPa
 
       {isEditing && (
         <Form.Item>
-          <Button type="primary" htmlType="submit" block>
+          <Button type="primary" htmlType="submit" disabled={loader} block>
             Update Profile
           </Button>
         </Form.Item>
       )}
     </Form>
+      </>
+   
+    
   );
 };
 
