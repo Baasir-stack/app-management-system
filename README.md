@@ -1,6 +1,6 @@
 # App Management System
 
-This is a full-stack application that consists of a React frontend and a Node.js/Express backend. The app allows users to manage various tasks, and it's deployed at [App Management System](https://app-management-system.netlify.app/).
+This is a full-stack application that consists of a React frontend and a Node.js/Express backend. The app allows users to manage various tasks.
 
 ## Prerequisites
 
