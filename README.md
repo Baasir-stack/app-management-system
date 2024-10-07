@@ -17,7 +17,7 @@ If you don't have Docker installed, you can install it by following the instruct
    Clone the repository to your local machine using the following command:
 
    ```bash
-   git clone https://github.com/your-repo/app-management-backend.git
+   git clone https://github.com/Baasir-stack/app-management-system.git
    ```
 
 2. **Run the below docker command**:  
